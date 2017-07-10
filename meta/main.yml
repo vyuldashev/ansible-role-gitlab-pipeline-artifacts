@@ -1,0 +1,11 @@
+galaxy_info:
+  author: Vladimir Yuldashev
+  description: Role to download GitLab Pipeline Artifacts and extract to folder
+
+  license: MIT
+
+  min_ansible_version: 2.2
+
+  galaxy_tags: ['gitlab', 'pipeline']
+
+dependencies: []

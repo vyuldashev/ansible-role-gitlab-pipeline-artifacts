@@ -22,3 +22,8 @@
     remote_src: yes
     src: "{{ gitlab_temp_dir.path }}/{{ gitlab_pipeline }}.zip"
     dest: "{{ gitlab_unarchive_path }}"
+
+- name: GitLab | Delete Temporary Folder
+  file:
+    dest: "{{ gitlab_temp_dir.path }}"
+    state: absent

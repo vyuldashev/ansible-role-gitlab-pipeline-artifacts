@@ -1,29 +1,29 @@
 - name: GitLab | Get Job Information
   uri:
-    url: "{{ gitlab_url }}/api/v4/projects/{{ gitlab_project | regex_replace('/', '%2F') }}/pipelines/{{ gitlab_pipeline }}/jobs"
+    url: "{{ GITLAB_URL }}/api/v4/projects/{{ GITLAB_PROJECT | regex_replace('/', '%2F') }}/pipelines/{{ GITLAB_PIPELINE }}/jobs"
     headers:
-      PRIVATE-TOKEN: "{{ gitlab_token }}"
-  register: gitlab_build
+      PRIVATE-TOKEN: "{{ GITLAB_TOKEN }}"
+  register: GITLAB_BUILD
 
 - name: GitLab | Create Temporary Folder For Artifacts
   tempfile:
     state: directory
     suffix: artifacts
-  register: gitlab_temp_dir
+  register: GITLAB_TEMP_DIR
 
 - name: GitLab | Download Artifacts
   get_url:
-    url: "{{ gitlab_url }}/api/v4/projects/{{ gitlab_project | regex_replace('/', '%2F') }}/jobs/artifacts/{{ gitlab_build.json[0].ref }}/download?job=build"
-    headers: 'PRIVATE-TOKEN: {{ gitlab_token }}'
-    dest: "{{ gitlab_temp_dir.path }}/{{ gitlab_pipeline }}.zip"
+    url: "{{ GITLAB_URL }}/api/v4/projects/{{ GITLAB_PROJECT | regex_replace('/', '%2F') }}/jobs/artifacts/{{ GITLAB_BUILD.json[0].ref }}/download?job=build"
+    headers: 'PRIVATE-TOKEN: {{ GITLAB_TOKEN }}'
+    dest: "{{ GITLAB_TEMP_DIR.path }}/{{ GITLAB_PIPELINE }}.zip"
 
 - name: GitLab | Extract Artifacts
   unarchive:
     remote_src: yes
-    src: "{{ gitlab_temp_dir.path }}/{{ gitlab_pipeline }}.zip"
-    dest: "{{ gitlab_unarchive_path }}"
+    src: "{{ GITLAB_TEMP_DIR.path }}/{{ GITLAB_PIPELINE }}.zip"
+    dest: "{{ GITLAB_UNARCHIVE_PATH }}"
 
 - name: GitLab | Delete Temporary Folder
   file:
-    dest: "{{ gitlab_temp_dir.path }}"
+    dest: "{{ GITLAB_TEMP_DIR.path }}"
     state: absent
